@@ -13,8 +13,10 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 
 import { DateRangePicker } from 'react-date-range';
 
+import { useRouter } from 'next/router'
 
-const Header = () => {
+
+const Header = ({placeholder}) => {
 
     const [searchInput, setSearchInput] = useState('');
 
@@ -22,6 +24,7 @@ const Header = () => {
     const [endDate, setEndDate] = useState(new Date());
 
     const [noOfGuests, setNoOfGuests] = useState(1);
+    const router = useRouter();
 
 
     const selectionRange={
@@ -40,6 +43,17 @@ const Header = () => {
         setSearchInput("");
     }
 
+    const search =() =>{
+        router.push({
+            pathname: '/search',
+            query:{
+                location: searchInput,
+                startDate: startDate.toISOString(),
+                endDate: endDate.toISOString(),
+                noOfGuests
+            }
+        })
+    }
 
    
 
@@ -47,7 +61,7 @@ const Header = () => {
     <header className='sticky top-0 z-50 grid grid-cols-3 shadow-md p-5 md:px-10 bg-white '>
         
         {/* Left */}
-        <div className='relative flex items-start h-10 cursor-pointer my-auto '>
+        <div onClick={()=> router.push('/')} className='relative flex items-start h-10 cursor-pointer my-auto '>
             <Image 
                 src= 'https://links.papareact.com/qd3'
                 layout = 'fill'
@@ -64,7 +78,8 @@ const Header = () => {
             value={searchInput}
             onChange= {(e) => setSearchInput(e.target.value)}
 
-            className='flex-grow pl-5 bg-transparent outline-none text-sm text-gray-600 placeholder-gray-400' type="text" placeholder='start your search'/>
+            className='flex-grow pl-5 bg-transparent outline-none text-sm text-gray-600 placeholder-gray-400' type="text" 
+            placeholder={placeholder || 'start your search'}/>
             <SearchIcon className='hidden md:inline-flex h-8 bg-red-400 text-white rounded-full p-2 cursor-pointer md:mx-2' />
         </div>
         {/* Right */}
@@ -95,7 +110,7 @@ const Header = () => {
                 </div>
                 <div className='flex'>
                     <button onClick={resetInput} className='flex-grow text-gray-500'>Cancel</button>
-                    <button className='flex-grow text-red-400'>Search</button>
+                    <button onClick={search} className='flex-grow text-red-400'>Search</button>
                 
                 </div>
 
